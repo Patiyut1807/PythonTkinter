@@ -5,7 +5,7 @@ root.title('Omakasa')
 username = StringVar()
 password = StringVar()
 
-LogIn_txt = Label(root,text='Login',font=("Arial Bold", 25)).grid(column=1,row=0)
+LogIn_txt = Label(root,text='Omakasa',font=("Arial Bold", 25)).grid(column=1,row=0)
 LogIn_user_txt = Label(root,text='Username',font=("Arial", 15)).grid(column=2,row=1)
 LogIn_pass_txt = Label(root,text='Password',font=("Arial", 15)).grid(column=2,row=3)
 
