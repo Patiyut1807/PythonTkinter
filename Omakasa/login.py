@@ -22,7 +22,7 @@ def checkLogin():
     Id,Pass = Login_file.read().split('\n')
     if Id == ID_INPUT and Pass == PASS_INPUT:
             print('Log In succes!') 
-            
+            Login.destroy()
     else : print('Log In failed!')
     Login_file.close()
     
