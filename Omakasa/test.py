@@ -1,28 +1,15 @@
-#Import the required Libraries
-from tkinter import *
-from tkinter import ttk
-#Create an instance of tkinter frame
-win = Tk()
-#Set the geometry of tkinter frame
-win.geometry("750x350")
+import tkinter as tk
 
-#Define a function to submit the validate the value of Entry widget
-def submit_name():
-   Label(frame, text="Hello "+ entry.get(), font=('Helvetica',12, 'bold')).pack(pady=20)
-   submit.configure(state= "disabled")
 
-#Creates a Frame
-frame = LabelFrame(win, width= 400, height= 180, bd=3)
-frame.pack()
-#Create an Entry widget in the Frame for Accepting the Username
-entry = ttk.Entry(frame, width= 40)
-entry.insert(INSERT, "Enter Your Name")
-entry.pack(ipadx= 30, ipady=30)
+def DarkenLabel():
+    label.config(bg="gray")
 
-#Set the focus on Entry1
-entry.focus_set()
+root = tk.Tk()
+app = tk.Frame(root)
+app.pack()
 
-#Create a submit button
-submit= ttk.Button(win, text= "submit",command=submit_name)
-submit.pack(pady=10)
-win.mainloop()
+label = tk.Label(app, bg="white", pady=5, font=(None, 1), height=20, width=720)
+checkbox = tk.Checkbutton(app, bg="white", command=DarkenLabel)
+label.grid(row=0, column=0, sticky="ew")
+checkbox.grid(row=0, column=0, sticky="w")
+root.mainloop()
