@@ -40,8 +40,16 @@ def Login_screen():
         Login_file.close()
     Hint_error_text = Label(Login,text='Your username or password is incorrect',bg='white',fg='white')
     Hint_error_text.pack()
-    LogIn_btn = Button(Login,text='Log In',command=checkLogin,width=7,height=1,bd=3,font=("Arial Bold", 10),background="#FD650D",fg='white').pack(pady=15)
-   
+    LogIn_btn = Button(Login
+                       ,text='Log In'
+                       ,command=checkLogin
+                       ,width=7,height=1
+                       ,bd=3
+                       ,font=("Arial Bold", 10)
+                       ,background="#FD650D"
+                       ,fg='white'
+                       ,relief=FLAT)
+    LogIn_btn.pack(pady=15)
     Login.geometry("450x300+500+200")
     Login.mainloop() 
     
