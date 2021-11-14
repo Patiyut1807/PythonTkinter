@@ -1,2 +1,6 @@
 admin01
-omakasa6401
+admin02
+admin03
+admin04
+admin05
+admin06

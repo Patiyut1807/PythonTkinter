@@ -1,5 +1,4 @@
 from tkinter import *
-from typing import Container
 #----------------------------------------------------------------
 def Login_screen():
     Login = Tk()
@@ -25,19 +24,22 @@ def Login_screen():
    
     
     def checkLogin():
+        ID_check = FALSE
         ID_INPUT = Id_in.get()
         PASS_INPUT = Pass_in.get()
         Login_file = open('Omakasa/Data/admin.txt', 'r')
-        Id,Pass = Login_file.read().split('\n')
-        if Id == ID_INPUT and Pass == PASS_INPUT:
-            print('Log In succes!') 
+        Id = Login_file.read().split('\n')
+        for ID in Id :
+            if ID == ID_INPUT and 'omakasa6401'== PASS_INPUT:
+                ID_check = TRUE
+        if ID_check :
             Login.destroy()
             main_screen()
         else : 
-            print('Log In failed!')
-            Hint_error_text = Label(Login,text='Your username or password is incorrect',bg='white',fg='red').pack()
+            Hint_error_text.config(fg='red')
         Login_file.close()
-    
+    Hint_error_text = Label(Login,text='Your username or password is incorrect',bg='white',fg='white')
+    Hint_error_text.pack()
     LogIn_btn = Button(Login,text='Log In',command=checkLogin,width=7,height=1,bd=3,font=("Arial Bold", 10),background="#FD650D",fg='white').pack(pady=15)
    
     Login.geometry("450x300+500+200")
