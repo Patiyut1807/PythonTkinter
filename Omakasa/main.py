@@ -1,79 +1,99 @@
 from tkinter import *
-#----- add_row func-----------------------
-n=0
+from tkinter import ttk
+import time
+
+count = 0
 def main_screen():
-    root = Tk()
-    root.title('Omakasa')
-    cv_table = Canvas(root)
-    def add_row():
-        global n
-        frm_row = Frame(frm_table,width=660,height=15,pady=1,bg="#a8a5a5")
-        frm_row.pack()
-        table_n = Label(frm_row,text=n,font=("Arial", 13),width=3)
-        customer = Label(frm_row,text='Patipan',font=("Arial", 13),width=15,bg='white')
-        customer_n = Label(frm_row,text='5',font=("Arial", 13),width=3)
-        checkIn = Label(frm_row,text='11/11/64-11:11',font=("Arial", 13),width=13,bg='white')
-        checkOut = Label(frm_row,text='11/11/64-12:11',font=("Arial", 13),width=13)
-        lb_price = Label(frm_row,text='11500',font=("Arial", 13),padx='25',width=1,bg='white')
-        lb_total_price = Label(frm_row,text='11500',font=("Arial", 13),padx='25',width=1)
-        btn_bill = Button(frm_row,text='เช็คบิล',padx=15,height=1,background="#49FF00")
-        
-        table_n.grid(column=0,row=0)
-        customer.grid(column=1,row=0)
-        customer_n.grid(column=2,row=0)
-        checkIn.grid(column=3,row=0)
-        checkOut.grid(column=4,row=0)
-        lb_price.grid(column=5,row=0)
-        lb_total_price.grid(column=6,row=0)
-        btn_bill.grid(column=7,row=0)
-        n+=1
+    main = Tk()
+    main.title('Omakasa')
+    main.geometry("720x720+300+0")
     #----------------------------------------------------------------
+    def add_screen():
+        add = Tk()
+        add.title('Omakasa-insert')
+        add.geometry("200x160+600+150")
+        add['bg']='#FD650D'
     
-    Logo_txt = Label(root,text='OMAKASA',font=("Arial Bold", 45),background="#FD650D",fg='white').place(x=10,y=10)
+        frm_contain = Frame(add,bg='#FD650D',width=180,height=150)
+        frm_contain.place(x=5,y=25)
+       
+        frm_name = Frame(frm_contain,bg='#FD650D',pady=10)
+        lb_name = Label(frm_name,text='Name',bg='white')
+        en_name = Entry(frm_name,text='',width=13,font=("Arial",14))
+        frm_name.pack()
+        lb_name.grid(column=0,row=0)
+        en_name.grid(column=1,row=0)
     
-    frm_contain_btn = Frame(root,bg='white',width=60,height=80)
-    btn_add = Button(frm_contain_btn,text='เพิ่ม',font=("Arial", 10),relief=FLAT,width=5,bg='green',pady=2)
-    btn_edit = Button(frm_contain_btn,text='แก้ไข',font=("Arial", 10),relief=FLAT,width=5,bg='white',pady=2)
-    btn_del = Button(frm_contain_btn,text='ลบ',font=("Arial", 10),relief=FLAT,width=5,bg='white',pady=2)
+        frm_amount = Frame(frm_contain,bg='#FD650D',pady=10)
+        lb_amount = Label(frm_amount,text='Amount',bg='white')
+        en_amount = Entry(frm_amount,text='',width=12,font=("Arial",14))
+        frm_amount.pack()
+        lb_amount.grid(column=0,row=0)
+        en_amount.grid(column=1,row=0)
+        def add_data():
+            global count
+            t = time.localtime(time.time())
+            tv_table.insert(parent='', index='end', iid=count, text='', values=(count,en_name.get(), en_amount.get(),f'{t.tm_mday}/{t.tm_mon}/{t.tm_year}-{t.tm_hour}:{t.tm_min}','-','-','-'))
+            count+=1
+            add.destroy()
+        btn_add_data = Button(add,text='เพิ่ม',bg='white',relief=FLAT,width=10,height=1,command=add_data)
+        btn_add_data.place(x=65,y=120)
     
-    frm_contain_btn.place(x=650,y=5)
+        add.mainloop()
+    #-----------------------------------------------------------------
+    Logo_txt = Label(main,text='OMAKASA',font=("Arial Bold", 45),background="#FD650D",fg='white').place(x=10,y=10)
+    
+    frm_contain_btn = Frame(main,bg='white',width=60,height=80,)
+    btn_add = Button(frm_contain_btn,text='เพิ่ม',font=("Arial bold", 12),relief=RIDGE,width=5,bg='#2ff764',fg='white',bd=2,command=add_screen)
+    btn_edit = Button(frm_contain_btn,text='แก้ไข',font=("Arial bold", 12),relief=RIDGE,width=5,bg='#fceb4c',fg='white',state=DISABLED)
+    btn_del = Button(frm_contain_btn,text='ลบ',font=("Arial bold", 12),relief=RIDGE,width=5,bg='#ed3737',fg='white',state=DISABLED)
+    
+    frm_contain_btn.place(x=485,y=135)
     btn_add.grid(column=0,row=0)
-    btn_edit.grid(column=0,row=1)
-    btn_del.grid(column=0,row=2)
+    btn_edit.grid(column=1,row=0)
+    btn_del.grid(column=2,row=0)
     
     text_search = StringVar()
-    Search_box  = Entry(root,textvariable=text_search, font=("Arial", 16),width=20).place(x=370,y=95) 
-    Search_button = Button(root,text='ค้นหา',font=("Arial Bold", 13),background="#FD650D",fg='white',command=add_row).place(x=620,y=92)
+    Search_box  = Entry(main,textvariable=text_search, font=("Arial", 16),width=20).place(x=370,y=95) 
+    Search_button = Button(main,text='ค้นหา',font=("Arial Bold", 13),background="#FD650D",fg='white').place(x=620,y=92)
+    
+    frm_table =Frame(main, bg="white")
+    frm_table.place(width=640, height=500, x=30, y=175)
+    
+    tv_table = ttk.Treeview(frm_table)
+    tv_table['columns'] = ('No.', 'Name', 'Amount', 'CheckIn','CheckOut', 'Price', 'Total')
 
-    fr = Frame(root,bg='white',width=300,height=3)
-    fr.place(x=15,y=80)
+    tv_table.heading('#0', text='', anchor=CENTER)
+    tv_table.heading('No.', text='No', anchor=CENTER)
+    tv_table.heading('Name', text='Name', anchor=CENTER)
+    tv_table.heading('Amount', text='Amount', anchor=CENTER)
+    tv_table.heading('CheckIn', text='CheckIn', anchor=CENTER)
+    tv_table.heading('CheckOut', text='CheckOut', anchor=CENTER)
+    tv_table.heading('Price', text='Price', anchor=CENTER)
+    tv_table.heading('Total', text='Total', anchor=CENTER)
+
+    tv_table.column('#0', width=0, stretch=NO)
+    tv_table.column('No.', anchor=CENTER,width=25)
+    tv_table.column('Name', anchor=CENTER, width=150)
+    tv_table.column('Amount', anchor=CENTER, width=60)
+    tv_table.column('CheckIn', anchor=CENTER, width=120)
+    tv_table.column('CheckOut', anchor=CENTER, width=120)
+    tv_table.column('Price', anchor=CENTER, width=80)
+    tv_table.column('Total', anchor=CENTER, width=80)
+    tv_table.place(x=0,y=0)
     
-    frm_topic = Frame(root,bg='white',width=670,height=75,bd=2)
-    frm_topic.place(x=25,y=130)
-    
-    table_n = Label(frm_topic,text='ลำดับ',font=("Arial", 13),width=3,wraplength= 20,bg='white',height=2)
-    customer = Label(frm_topic,text='ชื่อ',font=("Arial", 13),width=15,height=2)
-    customer_n = Label(frm_topic,text='จำ นวน',font=("Arial", 13),width=3,wraplength= 30,bg='white',height=2)
-    checkIn = Label(frm_topic,text='เวลาเข้า',font=("Arial", 13),width=13,height=2)
-    checkOut = Label(frm_topic,text='เวลาออก',font=("Arial", 13),width=13,height=2,bg='white')
-    lb_price = Label(frm_topic,text='ราคา/หัว',font=("Arial", 13),padx='25',width=1,height=2)
-    lb_total_price = Label(frm_topic,text='ราคารวม',font=("Arial", 13),padx='25',width=1,height=2,bg='white')
-    
-    table_n.grid(column=0,row=0)
-    customer.grid(column=1,row=0)
-    customer_n.grid(column=2,row=0)
-    checkIn.grid(column=3,row=0)
-    checkOut.grid(column=4,row=0)
-    lb_price.grid(column=5,row=0)
-    lb_total_price.grid(column=6,row=0)
+    fr = Frame(main,bg='white',width=300,height=3)
+    fr.place(x=15,y=75)
     
     
-    frm_table = Frame(root,bg="white")
-    frm_table.place(width=670,height=500,x=25,y=175)
+#--------------------------------------------
     
-    scr_bar = Scrollbar(frm_table)
-    scr_bar.pack(side=RIGHT,fill=Y)
-    root.geometry("720x720+300+0")
-    root.mainloop() 
+    
+    
+    
+    
+#--------------------------------------------
+    
+    main.mainloop() 
     
 main_screen()
