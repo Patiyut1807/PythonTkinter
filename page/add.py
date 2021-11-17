@@ -10,6 +10,7 @@ def add_screen():
     frm_contain = Frame(add,bg='#FD650D',width=180,height=150)
     frm_contain.place(x=5,y=25)
     add_name = StringVar()
+    lb = Label(add,text='เพิ่มข้อมูล',fg='#FD650D',bg='white',font=("Arial bold",14)).pack()
     frm_name = Frame(frm_contain,bg='#FD650D',pady=10)
     lb_name = Label(frm_name,text='Name',bg='white')
     en_name = Entry(frm_name,text='',width=13,textvariable=add_name,font=("Arial",14))

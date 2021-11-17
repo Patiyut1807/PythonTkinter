@@ -20,6 +20,8 @@ def main_screen():
 
         frm_contain = Frame(add, bg='#FD650D', width=180, height=150)
         frm_contain.place(x=5, y=25)
+        
+        lb = Label(add,text='เพิ่มข้อมูล',fg='#FD650D',bg='white',font=("Arial bold",14)).pack()
 
         frm_name = Frame(frm_contain, bg='#FD650D', pady=10)
         lb_name = Label(frm_name, text='Name', bg='white')
@@ -114,7 +116,7 @@ def main_screen():
     menu_bar = Menu(main)
     user_menu = Menu(menu_bar,tearoff=0)
     user_menu.add_command(label='Edit Username')
-    user_menu.add_command(label='Sign Out',Login_screen)
+    user_menu.add_command(label='Sign Out',command=Login_screen)
     user_menu.add_command(label='Exit',command=main.destroy)
 
     menu_bar.add_cascade(label="User", menu=user_menu)

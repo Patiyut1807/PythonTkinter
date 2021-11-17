@@ -28,7 +28,9 @@ tv_table.column('Price', anchor=CENTER, width=80)
 tv_table.column('Total', anchor=CENTER, width=80)
 
 
-tv_table.insert(parent='', index=0, iid=0, text='', values=(1, 'Vineet', '3','11/11/64 - 11.11','11/11/64 - 11.11','199','1990'))
+tv_table.insert(parent='', index=0, text='', values=(1, 'Vineet', '3','11/11/64 - 11.11','11/11/64 - 11.11','199','1990'))
+tv_table.insert(parent='', index=0, text='', values=(1, 'Vineet', '3','11/11/64 - 11.11','11/11/64 - 11.11','199','1990'))
+
 tv_table.place(x=0,y=0)
 
 root.mainloop()

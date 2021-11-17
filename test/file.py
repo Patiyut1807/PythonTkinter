@@ -1,3 +1,4 @@
-f = open('Omakasa/Data/customer.txt', 'a')
-s = f.write('5'+'\n')
+s = 'as'
+f = open(f'Omakasa/Data/customer/{s}', 'w')
+s = f.write('4'+'\n')
 f.close()

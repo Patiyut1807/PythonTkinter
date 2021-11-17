@@ -1,39 +1,22 @@
-from tkinter import *
+import time
+d =[]
+q = time.time()
+d.append(list((2,'name2',3,q,'checkout2',299,2990)))
+print(d)
+s = d[0][1]
+f = open(f'Omakasa/Data/customer/{s}', 'w')
+for a in d[0] :
+   g = f.write(str(a)+'\n')
+f.close()
+f= open(f'Omakasa/Data/customer/{s}', 'r')
+e = f.read()
+f.close()
+e = e.split('\n')
+e[0]=int(e[0])
+e[2]=int(e[2])
+e[3]=float(e[3])
+e[5]=int(e[5])
+r = time.localtime(e[3])
 
-def donothing():
-   filewin = Toplevel(root)
-   button = Button(filewin, text="Do nothing button")
-   button.pack()
-   
-root = Tk()
-menubar = Menu(root)
-filemenu = Menu(menubar, tearoff=0)
-filemenu.add_command(label="New", command=donothing)
-filemenu.add_command(label="Open", command=donothing)
-filemenu.add_command(label="Save", command=donothing)
-filemenu.add_command(label="Save as...", command=donothing)
-filemenu.add_command(label="Close", command=donothing)
-
-filemenu.add_separator()
-
-filemenu.add_command(label="Exit", command=root.quit)
-menubar.add_cascade(label="File", menu=filemenu)
-editmenu = Menu(menubar, tearoff=0)
-editmenu.add_command(label="Undo", command=donothing)
-
-editmenu.add_separator()
-
-editmenu.add_command(label="Cut", command=donothing)
-editmenu.add_command(label="Copy", command=donothing)
-editmenu.add_command(label="Paste", command=donothing)
-editmenu.add_command(label="Delete", command=donothing)
-editmenu.add_command(label="Select All", command=donothing)
-
-menubar.add_cascade(label="Edit", menu=editmenu)
-helpmenu = Menu(menubar, tearoff=0)
-helpmenu.add_command(label="Help Index", command=donothing)
-helpmenu.add_command(label="About...", command=donothing)
-menubar.add_cascade(label="Help", menu=helpmenu)
-
-root.config(menu=menubar)
-root.mainloop()
+print (e)
+print(r.tm_hour)
