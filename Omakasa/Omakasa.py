@@ -6,6 +6,7 @@ import time
 admin =""
 DATA = []
 count = 0
+data_search = []
 # -----def function---------------------------------------------------
 
 def Login_screen():
@@ -193,9 +194,9 @@ def main_screen():
         
         lb_name = Label(frm_contain,bg='white',font=("Arial",13),text=f'ชื่อลูกค้า : {list[1]}',pady=5)
         lb_amount = Label(frm_contain,bg='white',font=("Arial",13),text=f'จำนวน : {list[2]}',pady=5)
-        time_format = time.localtime(list[3])
+        time_format = time.localtime(float(list[3]))
         lb_checkin = Label(frm_contain,bg='white',font=("Arial",13),text=f'เริ่มทานเวลา : {time_format.tm_mday}/{time_format.tm_mon}/{time_format.tm_year}-{time_format.tm_hour}:{time_format.tm_min}')
-        time_format = time.localtime(list[4])
+        time_format = time.localtime(float(list[4]))
         lb_checkout = Label(frm_contain,bg='white',pady=5,font=("Arial",13),text=f'ทานเสร็จเวลา : {time_format.tm_mday}/{time_format.tm_mon}/{time_format.tm_year}-{time_format.tm_hour}:{time_format.tm_min}')
         global admin
         lb_admin = Label(frm_contain,bg='white',font=("Arial",13),pady=10,text=f'ผู้รับผิดชอบ : {list[0]}')
@@ -240,15 +241,55 @@ def main_screen():
     def new_login():
         main.destroy()
         Login_screen()
+        
+    def search_data():
+        s=Search_box.get()
+        f= open(f'Omakasa/Data/customer/{s}')
+        global data_search
+        data_search = f.read().split('\n')
+        f.close()
+        data_search.pop()
+        print(data_search)
+        bill_screen(data_search)
+    def add_user_screen():
+        add = Tk()
+        add.title('Omakasa-add')
+        add.geometry("200x160+600+250")
+        add['bg'] = '#FD650D'
+
+        frm_contain = Frame(add, bg='#FD650D', width=180, height=150)
+        frm_contain.place(x=5, y=25)
+        lb = Label(add,text='เพิ่มผู้ดูแลระบบ',fg='#FD650D',bg='white',font=("Arial bold",14)).pack()
+
+        frm_name = Frame(frm_contain, bg='#FD650D', pady=10)
+        lb_name = Label(frm_name, text='Username', bg='white')
+        en_name = Entry(frm_name, text='', width=13, font=("Arial", 14))
+        frm_name.pack()
+        lb_name.grid(column=0, row=0)
+        en_name.grid(column=1, row=0)
+
+        def add_user():
+            f= open(f'Omakasa/Data/admin.txt','a')
+            add_new = f.write('\n'+en_name.get())
+            f.close()
+            add.destroy()
+            
+        btn_add_data = Button(add, text='เพิ่ม', bg='white',
+                              relief=FLAT, width=10, height=1, command=add_user)
+        btn_add_data.place(x=65, y=120)
+
+        add.mainloop()
+        
 # -----------------------------------------------------------------
 # ---------------tkinterUI--------------------------------------
 
     #create MENU_BAR
     menu_bar = Menu(main)
     user_menu = Menu(menu_bar,tearoff=0)
-    user_menu.add_command(label='Edit Username')
+    user_menu.add_command(label='Add User',command=add_user_screen)
     user_menu.add_command(label='Sign Out',command= new_login)
     user_menu.add_command(label='Exit',command=main.destroy)
+    
 
     menu_bar.add_cascade(label="User", menu=user_menu)
 
@@ -278,13 +319,6 @@ def main_screen():
     Search_box = Entry(main, font=(
         "Arial", 16), width=20)
     Search_box.place(x=370, y=95)
-    def search_data():
-        s=Search_box.get()
-        f= open(f'Omakasa/Data/customer/{s}')
-        data_search = f.read().split('\n')
-        f.close()
-        data_search.pop()
-        bill_screen(data_search)
     Search_button = Button(main, text='ค้นหา', font=(
         "Arial Bold", 13), background="#FD650D", fg='white',command=search_data).place(x=620, y=92)
     
@@ -325,5 +359,4 @@ def main_screen():
     main.mainloop()
 # --------------------------------------------
 
-#Login_screen()
-main_screen()
+Login_screen()
