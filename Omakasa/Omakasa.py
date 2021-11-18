@@ -352,7 +352,7 @@ def main_screen():
     btn_check_bill.place(x=557, y=540)
     
     btn_generate_bill = Button(main, width=10, height=1,
-                            text="บิล", font=('Arail bold', 15), command=generate_bill)
+                            text="ใบเสร็จ", font=('Arail bold', 15), command=generate_bill)
     btn_generate_bill.place(x=420, y=540)
 
     main.config(menu=menu_bar)
