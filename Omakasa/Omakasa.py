@@ -3,11 +3,13 @@ from tkinter import ttk
 import time
 
 # -------------------------------------------------------------------
-admin =""
+admin = ""
 DATA = []
 count = 0
 data_search = []
+INDEX =''
 # -----def function---------------------------------------------------
+
 
 def Login_screen():
     Login = Tk()
@@ -57,12 +59,15 @@ def Login_screen():
     Login.mainloop()
 
 # ----------------------------------------------------------------
+f = open(f'Omakasa/Data/index.txt','r')
+INDEX = int(f.read())
+f.close()
 
 def main_screen():
     main = Tk()
     main.title('Omakasa')
     main.geometry("720x600+400+30")
-
+    
     def add_screen():
         add = Tk()
         add.title('Omakasa-insert')
@@ -71,7 +76,8 @@ def main_screen():
 
         frm_contain = Frame(add, bg='#FD650D', width=180, height=150)
         frm_contain.place(x=5, y=25)
-        lb = Label(add,text='เพิ่มข้อมูล',fg='#FD650D',bg='white',font=("Arial bold",14)).pack()
+        lb = Label(add, text='เพิ่มข้อมูล', fg='#FD650D',
+                   bg='white', font=("Arial bold", 14)).pack()
 
         frm_name = Frame(frm_contain, bg='#FD650D', pady=10)
         lb_name = Label(frm_name, text='Name', bg='white')
@@ -88,16 +94,19 @@ def main_screen():
         en_amount.grid(column=1, row=0)
 
         def add_data():
-            global admin
-            global count
-            time_w = time.time()
-            time_format = time.localtime(time_w)
-            DATA.append(list((admin,en_name.get(),int(en_amount.get()),time_w,0, 0, 0)))
-            tv_table.insert(parent='', index='end',iid=count, text='', values=(en_name.get(
-            ), en_amount.get(), f'{time_format.tm_mday}/{time_format.tm_mon}/{time_format.tm_year}-{time_format.tm_hour}:{time_format.tm_min}', '-', '-', '-'))
-            count +=1
-            add.destroy()
-            
+            if en_amount.get().isdigit():
+                global admin
+                global count
+                global  INDEX
+                time_w = time.time()
+                time_format = time.localtime(time_w)
+                DATA.append(
+                    list((admin, en_name.get(), int(en_amount.get()), time_w, 0, 0, 0,INDEX)))
+                tv_table.insert(parent='', index='end', iid=count, text='', values=(en_name.get(
+                ), en_amount.get(), f'{time_format.tm_mday}/{time_format.tm_mon}/{time_format.tm_year}-{time_format.tm_hour}:{time_format.tm_min}', '-', '-', '-'))
+                count += 1
+                add.destroy()
+
         btn_add_data = Button(add, text='เพิ่ม', bg='white',
                               relief=FLAT, width=10, height=1, command=add_data)
         btn_add_data.place(x=65, y=120)
@@ -108,8 +117,9 @@ def main_screen():
         if not len(tv_table.selection()):
             return
         selected = tv_table.selection()[0]
+
         def del_data():
-            DATA[int(selected)] =['','']
+            DATA[int(selected)] = ['', '']
             tv_table.delete(selected)
             delete_promt.destroy()
 
@@ -134,123 +144,207 @@ def main_screen():
             return
         edit = Tk()
         edit.title('Omakasa-edit')
-        edit.geometry("200x160+600+150")
+        edit.geometry("200x200+600+150")
         edit['bg'] = '#FD650D'
         frm_contain = Frame(edit, bg='#FD650D', width=180, height=150)
         frm_contain.place(x=5, y=25)
-        lb = Label(edit,text='แก้ไขข้อมูล',fg='#FD650D',bg='white',font=("Arial bold",14)).pack()
+        lb = Label(edit, text='แก้ไขข้อมูล', fg='#FD650D',
+                   bg='white', font=("Arial bold", 14)).pack()
 
-        frm_name = Frame(frm_contain, bg='#FD650D', pady=10)
+        frm_name = Frame(frm_contain, bg='#FD650D', pady=6)
         lb_name = Label(frm_name, text='Name', bg='white')
         en_name = Entry(frm_name, text='', width=13, font=("Arial", 14))
         frm_name.pack()
         lb_name.grid(column=0, row=0)
         en_name.grid(column=1, row=0)
 
-        frm_amount = Frame(frm_contain, bg='#FD650D', pady=10)
+        frm_amount = Frame(frm_contain, bg='#FD650D', pady=6)
         lb_amount = Label(frm_amount, text='Amount', bg='white')
         en_amount = Entry(frm_amount, text='', width=12, font=("Arial", 14))
         frm_amount.pack()
         lb_amount.grid(column=0, row=0)
         en_amount.grid(column=1, row=0)
 
+        frm_date = Frame(frm_contain, bg='#FD650D', pady=10, padx=3)
+        lb_day = Label(frm_date, text='วันที่', bg='white', padx=1)
+        en_day = Entry(frm_date, text='', width=2, font=("Arial", 12))
+        lb_mon = Label(frm_date, text='เดือน', bg='white', padx=1)
+        en_mon = Entry(frm_date, text='', width=2, font=("Arial", 12))
+        lb_year = Label(frm_date, text='ปี', bg='white', padx=1)
+        en_year = Entry(frm_date, text='', width=2, font=("Arial", 12))
+
+        box = Label(frm_date, text='', bg='#FD650D', padx=1, pady=10)
+        lb_hour = Label(frm_date, text='ชั่วโมง', bg='white', padx=1)
+        en_hour = Entry(frm_date, text='', width=2, font=("Arial", 12))
+        lb_min = Label(frm_date, text='นาที', bg='white', padx=1)
+        en_min = Entry(frm_date, text='', width=2, font=("Arial", 12))
+
+        frm_date.pack()
+        lb_day.grid(column=0, row=0)
+        en_day.grid(column=1, row=0)
+        lb_mon.grid(column=2, row=0)
+        en_mon.grid(column=3, row=0)
+        lb_year.grid(column=4, row=0)
+        en_year.grid(column=5, row=0)
+        lb_hour.grid(column=1, row=1)
+        en_hour.grid(column=2, row=1)
+        lb_min.grid(column=3, row=1)
+        en_min.grid(column=4, row=1)
+        box.grid(column=5, row=1)
+
         def edit_data():
             select_item = int(tv_table.selection()[0])
             if en_name.get() != '':
                 changed_name = en_name.get()
-                DATA[select_item][1]=changed_name
+                DATA[select_item][1] = changed_name
             if en_amount.get() != '':
                 changed_amount = en_amount.get()
-                DATA[select_item][2]=int(changed_amount)
+                DATA[select_item][2] = int(changed_amount)
+            time_edit = time.localtime(time.time())
+            time_edit = list((time_edit.tm_year, time_edit.tm_mon, time_edit.tm_mday, time_edit.tm_hour,time_edit.tm_min, time_edit.tm_sec, time_edit.tm_wday, time_edit.tm_yday, time_edit.tm_isdst))
+            check_edit = 0
+            if en_day.get() != '' and int(en_day.get()) <= 31 and int(en_day.get()) > 0:
+                time_edit[2] = int(en_day.get())
+                check_edit = 1
+            if en_mon.get() != '' and int(en_mon.get()) <= 12 and int(en_mon.get()) > 0:
+                time_edit[1] = int(en_mon.get())
+                check_edit = 1
+            if en_year.get() != '' and int(en_year.get()) <= 9999 and int(en_year.get()) > 0:
+                time_edit[0] = int(en_year.get())
+                check_edit = 1
+            if en_hour.get() != '' and int(en_hour.get()) <= 23 and int(en_hour.get()) >= 0:
+                time_edit[3] = int(en_hour.get())
+                check_edit = 1
+            if en_min.get() != '' and int(en_min.get()) <= 59 and int(en_min.get()) >= 0:
+                time_edit[4] = int(en_min.get())
+                check_edit = 1
+            time_edit = tuple(time_edit)
+            time_edit = time.mktime(time_edit)
+            DATA[select_item][4] = time_edit
             time_format = time.localtime(DATA[select_item][3])
-            tv_table.item(select_item,text='',values=(DATA[select_item][1], DATA[select_item][2],f'{time_format.tm_mday}/{time_format.tm_mon}/{time_format.tm_year}-{time_format.tm_hour}:{time_format.tm_min}','-', '-', '-'))
-            edit.destroy()
-        
-        btn_edit_data = Button(edit,text='แก้ไข',bg='white',relief=FLAT,width=10,height=1,command=edit_data)
-        btn_edit_data.place(x=65,y=120)
+            
+            if check_edit == 1:
+                edit.destroy()
+                check_bill()
+                
+            else:
+                tv_table.item(select_item, text='', values=(
+                DATA[select_item][1], DATA[select_item][2], f'{time_format.tm_mday}/{time_format.tm_mon}/{time_format.tm_year}-{time_format.tm_hour}:{time_format.tm_min}', '-', '-', '-'))
+                edit.destroy()
+
+        btn_edit_data = Button(edit, text='แก้ไข', bg='white',
+                               relief=FLAT, width=10, height=1, command=edit_data)
+        btn_edit_data.place(x=65, y=170)
         edit.mainloop()
-    
+
     def cal_prices(time):
         if time <= 60:
             return 0
-        elif time > 60 and time <=90 :
+        elif time > 60 and time <= 90:
             return 60
-        elif time > 90 and time <= 120 :
+        elif time > 90 and time <= 120:
             return 120
-        elif time > 120 and time <=180 :
+        elif time > 120 and time <= 180:
             return 240
-        elif time > 180 and time <=300 :
+        elif time > 180 and time <= 300:
             return 300
-        elif time > 300 :
+        elif time > 300:
             return 801
         return
-    
+
     def bill_screen(list):
         bill = Tk()
         bill.title('Omakasa-bill')
-        bill.geometry("300x250+100+250")
+        bill.geometry("300x300+100+250")
         bill['bg'] = '#FD650D'
-        frm_contain = Frame(bill,bg='white')
-        
-        lb_name = Label(frm_contain,bg='white',font=("Arial",13),text=f'ชื่อลูกค้า : {list[1]}',pady=5)
-        lb_amount = Label(frm_contain,bg='white',font=("Arial",13),text=f'จำนวน : {list[2]}',pady=5)
+        frm_contain = Frame(bill, bg='white')
+
+        lb_name = Label(frm_contain, bg='white', font=(
+            "Arial", 13), text=f'ชื่อลูกค้า : {list[1]}  Omakasa', pady=5)
+        lb_amount = Label(frm_contain, bg='white', font=(
+            "Arial", 13), text=f'จำนวน : {list[2]} คน', pady=5)
         time_format = time.localtime(float(list[3]))
-        lb_checkin = Label(frm_contain,bg='white',font=("Arial",13),text=f'เริ่มทานเวลา : {time_format.tm_mday}/{time_format.tm_mon}/{time_format.tm_year}-{time_format.tm_hour}:{time_format.tm_min}')
+        lb_checkin = Label(frm_contain, bg='white', font=(
+            "Arial", 13), text=f'เริ่มทานเวลา : {time_format.tm_mday}/{time_format.tm_mon}/{time_format.tm_year}-{time_format.tm_hour}:{time_format.tm_min}')
         time_format = time.localtime(float(list[4]))
-        lb_checkout = Label(frm_contain,bg='white',pady=5,font=("Arial",13),text=f'ทานเสร็จเวลา : {time_format.tm_mday}/{time_format.tm_mon}/{time_format.tm_year}-{time_format.tm_hour}:{time_format.tm_min}')
+        lb_checkout = Label(frm_contain, bg='white', pady=5, font=(
+            "Arial", 13), text=f'ทานเสร็จเวลา : {time_format.tm_mday}/{time_format.tm_mon}/{time_format.tm_year}-{time_format.tm_hour}:{time_format.tm_min}')
+
+        lb_price = Label(frm_contain, bg='white', pady=5, font=(
+            "Arial", 13), text=f'ราคา : {list[5]} บาท')
+        lb_total_price = Label(frm_contain, bg='white', pady=5, font=(
+            "Arial", 13), text=f'ราคารวม : {list[6]} บาท')
+
         global admin
-        lb_admin = Label(frm_contain,bg='white',font=("Arial",13),pady=10,text=f'ผู้รับผิดชอบ : {list[0]}')
-        
+        lb_admin = Label(frm_contain, bg='white', font=(
+            "Arial", 13), pady=10, text=f'ผู้รับผิดชอบ : {list[0]}  เลขที่ใบเสร็จ : {INDEX}')
         lb_name.pack()
         lb_amount.pack()
         lb_checkin.pack()
         lb_checkout.pack()
+        lb_price.pack()
+        lb_total_price.pack()
         lb_admin.pack()
-        btn_confirm = Button(frm_contain,command=bill.destroy,text='เสร็จสิ้น',pady=5,font=("Arial",10),bg='#FD650D',fg='white',relief=FLAT,width=10,height=1)
+        btn_confirm = Button(frm_contain, command=bill.destroy, text='เสร็จสิ้น', pady=5, font=(
+            "Arial", 10), bg='#FD650D', fg='white', relief=FLAT, width=10, height=1)
         btn_confirm.pack()
-        frm_contain.place(x=10,y=10,width=280, height=230)
+        frm_contain.place(x=10, y=10, width=280, height=280)
         select_item = tv_table.selection()[0]
         tv_table.delete(select_item)
         bill.mainloop()
-    
+
     def write_file(index):
-        f = open(f'Omakasa/Data/customer/{DATA[index][1]}', 'w')
+        global INDEX
+        f = open(f'Omakasa/Data/customer/{INDEX}', 'a')
         for item in DATA[index]:
             t = f.write(str(item)+'\n')
         f.close()
+        INDEX +=1
+        f = open(f'Omakasa/Data/index.txt', 'w')
+        f.write(str(INDEX))
+        f.close()
+
     def generate_bill():
         if not len(tv_table.selection()):
             return
         select_item = int(tv_table.selection()[0])
         if DATA[select_item][6] != 0 and DATA[select_item][5] != 0:
             bill_screen(DATA[select_item])
-    
+
     def check_bill():
         if not len(tv_table.selection()):
             return
         select_item = int(tv_table.selection()[0])
-        DATA[select_item][4] = time.time()
-        time_out = time.localtime(DATA[select_item][4]) 
+        if DATA[select_item][4] == 0:
+            DATA[select_item][4] = time.time()
         time_format = time.localtime(DATA[select_item][3])
-        delta_time = ((time_out.tm_hour-time_format.tm_hour)*60)+(time_out.tm_min-time_format.tm_min)
-        DATA[select_item][5]= 199 + cal_prices(delta_time)
+        time_out = time.localtime(DATA[select_item][4])
+
+        delta_time = ((time_out.tm_hour-time_format.tm_hour)*60) + (time_out.tm_min-time_format.tm_min)
+
+        DATA[select_item][5] = 199 + cal_prices(delta_time)
         DATA[select_item][6] = DATA[select_item][5]*DATA[select_item][2]
-        tv_table.item(select_item,text='',values=(DATA[select_item][1], DATA[select_item][2],f'{time_format.tm_mday}/{time_format.tm_mon}/{time_format.tm_year}-{time_format.tm_hour}:{time_format.tm_min}',f'{time_out.tm_mday}/{time_out.tm_mon}/{time_out.tm_year}-{time_out.tm_hour}:{time_out.tm_min}', DATA[select_item][5], DATA[select_item][6]))
+
+        tv_table.item(select_item, text='', values=(DATA[select_item][1], DATA[select_item][2], f'{time_format.tm_mday}/{time_format.tm_mon}/{time_format.tm_year}-{time_format.tm_hour}:{time_format.tm_min}',
+                      f'{time_out.tm_mday}/{time_out.tm_mon}/{time_out.tm_year}-{time_out.tm_hour}:{time_out.tm_min}', DATA[select_item][5], DATA[select_item][6]))
         write_file(select_item)
-        
+
     def new_login():
         main.destroy()
         Login_screen()
-        
+
     def search_data():
-        s=Search_box.get()
-        f= open(f'Omakasa/Data/customer/{s}')
+        s = Search_box.get()
+        if s == '':
+            return
+        f = open(f'Omakasa/Data/customer/{s}','r')
         global data_search
         data_search = f.read().split('\n')
         f.close()
         data_search.pop()
         print(data_search)
         bill_screen(data_search)
+
     def add_user_screen():
         add = Tk()
         add.title('Omakasa-add')
@@ -259,7 +353,8 @@ def main_screen():
 
         frm_contain = Frame(add, bg='#FD650D', width=180, height=150)
         frm_contain.place(x=5, y=25)
-        lb = Label(add,text='เพิ่มผู้ดูแลระบบ',fg='#FD650D',bg='white',font=("Arial bold",14)).pack()
+        lb = Label(add, text='เพิ่มผู้ดูแลระบบ', fg='#FD650D',
+                   bg='white', font=("Arial bold", 14)).pack()
 
         frm_name = Frame(frm_contain, bg='#FD650D', pady=10)
         lb_name = Label(frm_name, text='Username', bg='white')
@@ -269,37 +364,36 @@ def main_screen():
         en_name.grid(column=1, row=0)
 
         def add_user():
-            f= open(f'Omakasa/Data/admin.txt','a')
+            f = open(f'Omakasa/Data/admin.txt', 'a')
             add_new = f.write('\n'+en_name.get())
             f.close()
             add.destroy()
-            
+
         btn_add_data = Button(add, text='เพิ่ม', bg='white',
                               relief=FLAT, width=10, height=1, command=add_user)
         btn_add_data.place(x=65, y=120)
 
         add.mainloop()
-        
+
 # -----------------------------------------------------------------
 # ---------------tkinterUI--------------------------------------
 
-    #create MENU_BAR
+    # create MENU_BAR
     menu_bar = Menu(main)
-    user_menu = Menu(menu_bar,tearoff=0)
-    user_menu.add_command(label='Add User',command=add_user_screen)
-    user_menu.add_command(label='Sign Out',command= new_login)
-    user_menu.add_command(label='Exit',command=main.destroy)
-    
+    user_menu = Menu(menu_bar, tearoff=0)
+    user_menu.add_command(label='Add User', command=add_user_screen)
+    user_menu.add_command(label='Sign Out', command=new_login)
+    user_menu.add_command(label='Exit', command=main.destroy)
 
     menu_bar.add_cascade(label="User", menu=user_menu)
 
-    #create LOGO
+    # create LOGO
     Logo_txt = Label(main, text='OMAKASA', font=("Arial Bold", 45),
                      background="#FD650D", fg='white').place(x=10, y=10)
     fr = Frame(main, bg='white', width=300, height=3)
     fr.place(x=15, y=75)
 
-    #create BTN & SEARCHBOX
+    # create BTN & SEARCHBOX
     frm_contain_btn = Frame(main, bg='white', width=60, height=80,)
     global btn_add
     btn_add = Button(frm_contain_btn, text='เพิ่ม', font=("Arial bold", 12), relief=RIDGE, width=5, bg='#2ff764',
@@ -320,9 +414,9 @@ def main_screen():
         "Arial", 16), width=20)
     Search_box.place(x=370, y=95)
     Search_button = Button(main, text='ค้นหา', font=(
-        "Arial Bold", 13), background="#FD650D", fg='white',command=search_data).place(x=620, y=92)
-    
-    #create TABLE
+        "Arial Bold", 13), background="#FD650D", fg='white', command=search_data).place(x=620, y=92)
+
+    # create TABLE
     frm_table = Frame(main, bg="white")
     frm_table.place(width=633, height=350, x=43, y=175)
 
@@ -350,13 +444,15 @@ def main_screen():
     btn_check_bill = Button(main, width=10, height=1, fg='white', bg='#FD650D',
                             text="คิดเงิน", font=('Arail bold', 15), command=check_bill)
     btn_check_bill.place(x=557, y=540)
-    
+
     btn_generate_bill = Button(main, width=10, height=1,
-                            text="ใบเสร็จ", font=('Arail bold', 15), command=generate_bill)
+                               text="ใบเสร็จ", font=('Arail bold', 15), command=generate_bill)
     btn_generate_bill.place(x=420, y=540)
 
     main.config(menu=menu_bar)
     main.mainloop()
 # --------------------------------------------
 
+
 Login_screen()
+
