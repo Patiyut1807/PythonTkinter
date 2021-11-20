@@ -9,7 +9,12 @@ data_search = []
 INDEX =''
 # -----def function---------------------------------------------------
 
-
+def pull_index():
+    global INDEX
+    f = open(f'Omakasa/Data/index.txt','r')
+    INDEX = int(f.read())
+    f.close()
+# ---------------tkinterUI--------------------------------------
 def Login_screen():
     Login = Tk()
     Login.title('Omakasa')
@@ -57,13 +62,6 @@ def Login_screen():
     Login.geometry("450x300+500+200")
     Login.mainloop()
 
-# ----------------------------------------------------------------
-def pull_index():
-    global INDEX
-    f = open(f'Omakasa/Data/index.txt','r')
-    INDEX = int(f.read())
-    f.close()
-pull_index()
 def main_screen():
     main = Tk()
     main.title('Omakasa')
@@ -375,10 +373,6 @@ def main_screen():
         btn_add_data.place(x=65, y=120)
 
         add.mainloop()
-
-# -----------------------------------------------------------------
-# ---------------tkinterUI--------------------------------------
-
     # create MENU_BAR
     menu_bar = Menu(main)
     user_menu = Menu(menu_bar, tearoff=0)
@@ -452,7 +446,7 @@ def main_screen():
 
     main.config(menu=menu_bar)
     main.mainloop()
-# --------------------------------------------
 
+pull_index()
 Login_screen()
 
