@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import ttk
 import time
-
 # -------------------------------------------------------------------
 admin = ""
 DATA = []
@@ -38,6 +37,7 @@ def Login_screen():
         PASS_INPUT = Pass_in.get()
         Login_file = open('Omakasa/Data/admin.txt', 'r')
         Id = Login_file.read().split('\n')
+        Login_file.close()
         for ID in Id:
             if ID == ID_INPUT and 'omakasa6401' == PASS_INPUT:
                 ID_check = TRUE
@@ -48,7 +48,6 @@ def Login_screen():
             main_screen()
         else:
             Hint_error_text.config(fg='red')
-        Login_file.close()
     Hint_error_text = Label(
         Login, text='Your username or password is incorrect', bg='white', fg='white')
     Hint_error_text.pack()
@@ -59,10 +58,12 @@ def Login_screen():
     Login.mainloop()
 
 # ----------------------------------------------------------------
-f = open(f'Omakasa/Data/index.txt','r')
-INDEX = int(f.read())
-f.close()
-
+def pull_index():
+    global INDEX
+    f = open(f'Omakasa/Data/index.txt','r')
+    INDEX = int(f.read())
+    f.close()
+pull_index()
 def main_screen():
     main = Tk()
     main.title('Omakasa')
