@@ -137,6 +137,7 @@ def main_screen():
         lb_ask.pack(pady=10)
         btn_confirm.pack(side=LEFT, padx=20)
         btn_cancel.pack(side=RIGHT, padx=20)
+#----------------------แก้2-----entry-------------------------
     def edit_screen():
         if not len(tv_table.selection()):
             return
@@ -164,33 +165,78 @@ def main_screen():
         en_amount.grid(column=1, row=0)
 
         frm_date = Frame(frm_contain, bg='#FD650D', pady=10, padx=3)
-        lb_mintxt = Label(frm_date, text='เวลานั่งทาน', bg='white', padx=1)
+        lb_day = Label(frm_date, text='วันที่', bg='white', padx=1)
+        en_day = Entry(frm_date, text='', width=2, font=("Arial", 12))
+        lb_mon = Label(frm_date, text='เดือน', bg='white', padx=1)
+        en_mon = Entry(frm_date, text='', width=2, font=("Arial", 12))
+        lb_year = Label(frm_date, text='ปี', bg='white', padx=1)
+        en_year = Entry(frm_date, text='', width=2, font=("Arial", 12))
+
+        box = Label(frm_date, text='', bg='#FD650D', padx=1, pady=10)
+        lb_hour = Label(frm_date, text='ชั่วโมง', bg='white', padx=1)
+        en_hour = Entry(frm_date, text='', width=2, font=("Arial", 12))
         lb_min = Label(frm_date, text='นาที', bg='white', padx=1)
-        en_min = Entry(frm_date, text='', width=5, font=("Arial", 12))
+        en_min = Entry(frm_date, text='', width=2, font=("Arial", 12))
 
         frm_date.pack()
-        lb_mintxt.grid(column=2, row=1)
-        en_min.grid(column=3, row=1)
-        lb_min.grid(column=4, row=1)
+        lb_day.grid(column=0, row=0)
+        en_day.grid(column=1, row=0)
+        lb_mon.grid(column=2, row=0)
+        en_mon.grid(column=3, row=0)
+        lb_year.grid(column=4, row=0)
+        en_year.grid(column=5, row=0)
+        lb_hour.grid(column=1, row=1)
+        en_hour.grid(column=2, row=1)
+        lb_min.grid(column=3, row=1)
+        en_min.grid(column=4, row=1)
+        box.grid(column=5, row=1)
+#แก้ไข edit_data
         def edit_data():
             select_item = int(tv_table.selection()[0])
-            
+            time_format = time.localtime(DATA[select_item][3])
             if en_name.get() != '':
                 changed_name = en_name.get()
                 DATA[select_item][1] = changed_name
             if en_amount.get() != '':
                 changed_amount = en_amount.get()
                 DATA[select_item][2] = int(changed_amount)
-                
-            time_format = time.localtime(DATA[select_item][3])
-            time_edit =  time_format
+            time_edit = time.localtime(time.time())
             time_edit = list((time_edit.tm_year, time_edit.tm_mon, time_edit.tm_mday, time_edit.tm_hour,time_edit.tm_min, time_edit.tm_sec, time_edit.tm_wday, time_edit.tm_yday, time_edit.tm_isdst))
             check_edit = 0
-            if en_min.get().isdigit() and int(en_min.get())> 0 and int(en_min.get())<= 1440:
-                time_edit[2]= time_edit[2]+int(en_min.get())//(24*60)
-                time_edit[3]= time_edit[3]+(int(en_min.get())%(24*60))//60
-                time_edit[4]= time_edit[4]+(int(en_min.get())%(24*60))%60
+            
+            if en_day.get() != '' and int(en_day.get()) <= 31 and int(en_day.get()) > 0 :
+                if int(en_day.get()) <= time_format.tm_mday and en_mon.get()=='' :
+                    time_edit[1] =  time_edit[1]+1
+                time_edit[2] = int(en_day.get())
+                check_edit = 1    
+            if en_mon.get() != '' and int(en_mon.get()) <= 12 and int(en_mon.get()) > 0 :
+                if int(en_mon.get())<=time_format.tm_mon and en_year.get() =='':
+                    time_edit[0] = time_edit[0]+1
+                time_edit[1] = int(en_mon.get())
+                check_edit = 1        
+            
+            if en_year.get() != '' and int(en_year.get()) <= 9999 and int(en_year.get()) > 0 and int(en_year.get())>=time_format.tm_year:
+                time_edit[0] = int(en_year.get())
                 check_edit = 1
+                
+            if en_hour.get() != '' and int(en_hour.get()) <= 23 and int(en_hour.get()) >= 0 :
+                if int(en_hour.get())>time_format.tm_hour or (int(en_hour.get())<=time_format.tm_hour and en_day.get() !=''):
+                    time_edit[3] = int(en_hour.get())
+                    check_edit = 1
+                elif int(en_hour.get())<=time_format.tm_hour and en_day.get() =='\0':
+                    time_edit[3] = int(en_hour.get())
+                    time_edit[2] = time_edit[2]+1
+                    check_edit = 1
+                
+            if  en_min.get() != '\0' and int(en_min.get()) >= 0 and (int(en_min.get()) <= 59):
+                if int(en_min.get())>time_format.tm_min or (int(en_min.get())<=time_format.tm_min and en_hour.get() !=''):
+                    time_edit[4] = int(en_min.get())
+                    check_edit = 1    
+                elif int(en_min.get())<=time_format.tm_min and en_hour.get() =='':
+                    time_edit[4] = int(en_min.get())
+                    time_edit[3] = time_edit[3]+1
+                    check_edit = 1    
+                
             time_edit = tuple(time_edit)
             time_edit = time.mktime(time_edit)
             DATA[select_item][4] = time_edit
