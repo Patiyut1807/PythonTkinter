@@ -33,7 +33,6 @@
         lb_mintxt.grid(column=2, row=1)
         en_min.grid(column=3, row=1)
         lb_min.grid(column=4, row=1)
-#แก้ไข edit_data
         def edit_data():
             select_item = int(tv_table.selection()[0])
             
