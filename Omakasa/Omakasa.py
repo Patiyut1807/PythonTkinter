@@ -91,7 +91,14 @@ def main_screen():
         frm_amount.pack()
         lb_amount.grid(column=0, row=0)
         en_amount.grid(column=1, row=0)
-
+        #ตรงนี้
+        def add_table(DATA_to_add):
+            time_format = time.localtime(DATA_to_add[3])
+            if DATA_to_add[4]==0:
+                tv_table.insert(parent='', index='end', iid=DATA_to_add[8], text='', values=(DATA_to_add[1],DATA_to_add[2], f'{time_format.tm_mday}/{time_format.tm_mon}/{time_format.tm_year}-{time_format.tm_hour}:{time_format.tm_min}', '-', '-', '-'))
+            else :
+                time_out_format = time.localtime(DATA_to_add[4])
+                tv_table.insert(parent='', index='end', iid=DATA_to_add[8], text='', values=(DATA_to_add[1],DATA_to_add[2], f'{time_format.tm_mday}/{time_format.tm_mon}/{time_format.tm_year}-{time_format.tm_hour}:{time_format.tm_min}', f'{time_out_format.tm_mday}/{time_out_format.tm_mon}/{time_out_format.tm_year}-{time_out_format.tm_hour}:{time_out_format.tm_min}', DATA_to_add[5], DATA_to_add[6]))
         def add_data():
             if en_amount.get().isdigit():
                 global admin
@@ -100,12 +107,11 @@ def main_screen():
                 time_w = time.time()
                 time_format = time.localtime(time_w)
                 DATA.append(
-                    list((admin, en_name.get(), int(en_amount.get()), time_w, 0, 0, 0,INDEX)))
-                tv_table.insert(parent='', index='end', iid=count, text='', values=(en_name.get(
-                ), en_amount.get(), f'{time_format.tm_mday}/{time_format.tm_mon}/{time_format.tm_year}-{time_format.tm_hour}:{time_format.tm_min}', '-', '-', '-'))
+                    list((admin, en_name.get(), int(en_amount.get()), time_w, 0, 0, 0,INDEX,count)))
+                add_table(DATA[count])
                 count += 1
                 add.destroy()
-
+        #ถึงนี่
         btn_add_data = Button(add, text='เพิ่ม', bg='white',
                               relief=FLAT, width=10, height=1, command=add_data)
         btn_add_data.place(x=65, y=120)
@@ -118,7 +124,7 @@ def main_screen():
         selected = tv_table.selection()[0]
 
         def del_data():
-            DATA[int(selected)] = ['', '']
+            DATA[int(selected)][1] = ''
             tv_table.delete(selected)
             delete_promt.destroy()
 
@@ -175,31 +181,40 @@ def main_screen():
         def edit_data():
             select_item = int(tv_table.selection()[0])
             
-            if en_name.get() != '':
-                changed_name = en_name.get()
-                DATA[select_item][1] = changed_name
-            if en_amount.get() != '':
-                changed_amount = en_amount.get()
-                DATA[select_item][2] = int(changed_amount)
                 
             time_format = time.localtime(DATA[select_item][3])
             time_edit =  time_format
             time_edit = list((time_edit.tm_year, time_edit.tm_mon, time_edit.tm_mday, time_edit.tm_hour,time_edit.tm_min, time_edit.tm_sec, time_edit.tm_wday, time_edit.tm_yday, time_edit.tm_isdst))
             check_edit = 0
+            
+            if en_name.get() != '':
+                changed_name = en_name.get()
+                DATA[select_item][1] = changed_name
+            if en_amount.get() != '' and en_amount.get().isdigit():
+                changed_amount = en_amount.get()
+                DATA[select_item][2] = int(changed_amount)
+                check_edit = 1
+                
             if en_min.get().isdigit() and int(en_min.get())> 0 and int(en_min.get())<= 1440:
                 time_edit[2]= time_edit[2]+int(en_min.get())//(24*60)
                 time_edit[3]= time_edit[3]+(int(en_min.get())%(24*60))//60
                 time_edit[4]= time_edit[4]+(int(en_min.get())%(24*60))%60
                 check_edit = 1
-            time_edit = tuple(time_edit)
-            time_edit = time.mktime(time_edit)
-            DATA[select_item][4] = time_edit
+                time_edit = tuple(time_edit)
+                time_edit = time.mktime(time_edit)
+                DATA[select_item][4] = time_edit
             
-            if check_edit == 1:
+            if check_edit == 1 :
                 edit.destroy()
                 check_bill()
-                
-            else:
+            
+            elif DATA[select_item][4] > 0 :
+                time_out_format = time.localtime(DATA[select_item][4])
+                tv_table.item(select_item, text='', values=(
+                DATA[select_item][1], DATA[select_item][2], f'{time_format.tm_mday}/{time_format.tm_mon}/{time_format.tm_year}-{time_format.tm_hour}:{time_format.tm_min}',f'{time_out_format.tm_mday}/{time_out_format.tm_mon}/{time_out_format.tm_year}-{time_out_format.tm_hour}:{time_out_format.tm_min}',DATA[select_item][5], DATA[select_item][6]))
+                edit.destroy()
+            
+            else :
                 tv_table.item(select_item, text='', values=(
                 DATA[select_item][1], DATA[select_item][2], f'{time_format.tm_mday}/{time_format.tm_mon}/{time_format.tm_year}-{time_format.tm_hour}:{time_format.tm_min}', '-', '-', '-'))
                 edit.destroy()
@@ -271,7 +286,7 @@ def main_screen():
         for item in DATA[index]:
             t = f.write(str(item)+'\n')
         f.close()
-        INDEX +=1
+        INDEX += 1
         f = open(f'Omakasa/Data/index.txt', 'w')
         f.write(str(INDEX))
         f.close()
@@ -292,7 +307,14 @@ def main_screen():
         time_format = time.localtime(DATA[select_item][3])
         time_out = time.localtime(DATA[select_item][4])
 
-        delta_time = ((time_out.tm_hour-time_format.tm_hour)*60) + (time_out.tm_min-time_format.tm_min)
+        delta_hour = time_out.tm_hour-time_format.tm_hour
+        delta_min = time_out.tm_min-time_format.tm_min
+        if delta_hour < 0 :
+            delta_hour = 24+delta_hour
+        if delta_min < 0 :
+            delta_min = 60+ delta_min
+            delta_hour = delta_hour-1
+        delta_time = (delta_hour*60) + (delta_min)
 
         DATA[select_item][5] = 199 + cal_prices(delta_time)
         DATA[select_item][6] = DATA[select_item][5]*DATA[select_item][2]
@@ -304,11 +326,33 @@ def main_screen():
     def new_login():
         main.destroy()
         Login_screen()
-
+#นี่
+    def add_table(DATA_to_add):
+            time_format = time.localtime(DATA_to_add[3])
+            if DATA_to_add[4]==0:
+                tv_table.insert(parent='', index='end', iid=DATA_to_add[8], text='', values=(DATA_to_add[1],DATA_to_add[2], f'{time_format.tm_mday}/{time_format.tm_mon}/{time_format.tm_year}-{time_format.tm_hour}:{time_format.tm_min}', '-', '-', '-'))
+            else :
+                time_out_format = time.localtime(DATA_to_add[4])
+                tv_table.insert(parent='', index='end', iid=DATA_to_add[8], text='', values=(DATA_to_add[1],DATA_to_add[2], f'{time_format.tm_mday}/{time_format.tm_mon}/{time_format.tm_year}-{time_format.tm_hour}:{time_format.tm_min}', f'{time_out_format.tm_mday}/{time_out_format.tm_mon}/{time_out_format.tm_year}-{time_out_format.tm_hour}:{time_out_format.tm_min}', DATA_to_add[5], DATA_to_add[6]))
+        
     def search_data():
         s = Search_box.get()
         if s == '':
+            for data in tv_table.get_children():
+                        tv_table.delete(data)
+            for data in DATA:
+                if data[1]!='':
+                    add_table(data)
             return
+        n=0
+        for select_data in DATA : 
+            if select_data[1] == s:
+                if n==0 :
+                    for data in tv_table.get_children():
+                        tv_table.delete(data)
+                        n = n+1
+                add_table(select_data)
+        
         f = open(f'Omakasa/Data/customer/{s}','r')
         global data_search
         data_search = f.read().split('\n')
@@ -316,7 +360,7 @@ def main_screen():
         data_search.pop()
         print(data_search)
         bill_screen(data_search)
-
+#ถึงนี่
     def add_user_screen():
         add = Tk()
         add.title('Omakasa-add')

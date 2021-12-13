@@ -1,4 +1,4 @@
- def edit_screen():
+def edit_screen():
         if not len(tv_table.selection()):
             return
         edit = Tk()
