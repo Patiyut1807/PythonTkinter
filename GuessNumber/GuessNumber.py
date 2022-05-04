@@ -20,6 +20,7 @@ def update_result(text):
 def new_game():
     guess_button.config(state='normal')
     global TARGET, RETRIES
+    number_form.delete(0,'end')
     TARGET = random.randint(0, 100)
     RETRIES = 0
     update_result(text="Guess a number between\n 1 and 100")
@@ -36,7 +37,7 @@ def play_game():
                 hint = "The guess number is less than {}".format(
                     choice)
             else:
-                hint = "The guess number is more than".format(
+                hint = "The guess number is more than {}".format(
                     choice)
             result += "\n\nHINT :\n" + hint
 
