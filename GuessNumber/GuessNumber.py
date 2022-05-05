@@ -12,7 +12,6 @@ window.title('Guess Number Game')
 TARGET = random.randint(0, 100)
 RETRIES = 0
 
-
 def update_result(text):
     result.configure(text=text)
 
